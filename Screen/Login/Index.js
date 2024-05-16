@@ -1,58 +1,49 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import {StyleSheet, Text, View, TextInput} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import Images from '../../Constant/Images';
 import Strings from '../../Constant/Strings';
 import Btn from '../../Components/Btn';
 import Inputext from '../../Components/Inputext';
-import { White, Black } from '../../Constant/Color';
+import {White, Black} from '../../Constant/Color';
 import axios from 'react-native-axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-const Login = ({ navigation }) => {
-
+const Login = ({navigation}) => {
   useEffect(() => {
     getUser();
-  }, [])
-
+  }, []);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-
-
-
-
-
   const onPressLogin = () => {
     if (!email || !password) {
-      setError('Please fill both fields')
+      setError('Please fill both fields');
     } else {
       setDataAsyc();
       loginApiCall();
-      setError('')
+      setError('');
     }
-  }
+  };
 
   const setDataAsyc = async () => {
     const data = {
       email: email,
-      password: password
-    }
+      password: password,
+    };
     try {
-      await AsyncStorage.setItem("user", JSON.stringify(data));
+      await AsyncStorage.setItem('user', JSON.stringify(data));
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getUser = async () => {
     try {
-      const userData = JSON.parse(await AsyncStorage.getItem("user"))
+      const userData = JSON.parse(await AsyncStorage.getItem('user'));
       if (userData) {
-        navigation.navigate('Home')
-
+        navigation.navigate('Home');
       }
     } catch (error) {
       console.log(error);
@@ -60,52 +51,45 @@ const Login = ({ navigation }) => {
   };
 
   const loginApiCall = () => {
-    axios.post('https://reqres.in/api/login ', {
-      email: email,
-      password: password,
-    })
-      .then((response) => {
-        navigation.navigate('Home')
-
-      }, (error) => {
-        navigation.navigate('Home')
-
-      });
-  }
+    axios
+      .post('https://reqres.in/api/login ', {
+        email: 'abhi',
+        password: '12345',
+      })
+      .then(
+        response => {
+          navigation.navigate('Home');
+        },
+        error => {
+          navigation.navigate('Home');
+        },
+      );
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>{Strings.Login}</Text>
-      <View style={{ marginHorizontal: 10 }}>
+      <View style={{marginHorizontal: 10}}>
         <TextInput
           placeholderTextColor={Black}
           placeholder={Strings.Email}
           style={styles.inputStyle}
-          onChangeText={(val) => setEmail(val)}
+          onChangeText={val => setEmail(val)}
           value={email}
         />
-
 
         <TextInput
           placeholderTextColor={Black}
           placeholder={Strings.Password}
           style={styles.inputStyle}
-          onChangeText={(val) => setPassword(val)}
+          onChangeText={val => setPassword(val)}
           value={password}
         />
 
-
-        {
-          error && (
-            <Text style={styles.errorText}>{error}</Text>
-          )
-        }
+        {error && <Text style={styles.errorText}>{error}</Text>}
       </View>
       <View style={styles.btnView}>
-        <Btn
-          btnText={Strings.Login}
-          onPress={onPressLogin}
-        />
+        <Btn btnText={Strings.Login} onPress={onPressLogin} />
       </View>
     </View>
   );
@@ -135,8 +119,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderColor: Black,
     padding: 10,
-    marginTop: 30
+    marginTop: 30,
   },
-  btnView: { flex: 0.4, justifyContent: 'flex-end' },
-  errorText: { color: 'red', textAlign: 'center', marginTop: 20 }
+  btnView: {flex: 0.4, justifyContent: 'flex-end'},
+  errorText: {color: 'red', textAlign: 'center', marginTop: 20},
 });
